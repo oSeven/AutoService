@@ -1,32 +1,61 @@
+apply plugin: 'java'
+apply plugin: 'kotlin'
+apply plugin: 'com.novoda.bintray-release'
+
+group 'com.os.auto.service'
+version '0.1.1'
+
+sourceCompatibility = 1.8
+
 buildscript {
     ext.kotlin_version = '1.2.61'
 
     repositories {
-        mavenCentral()
+        jcenter()
+        google()
     }
+
     dependencies {
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+        classpath 'com.novoda:bintray-release:0.8.1'
     }
 }
 
-group 'com.os.auto.service'
-version '1.0.0'
-
-apply plugin: 'java-library'
-apply plugin: 'kotlin'
-
 repositories {
-    mavenCentral()
+    jcenter()
+    google()
 }
 
 dependencies {
-    compile "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
-    implementation 'com.google.auto:auto-common:0.10'
+    testImplementation group: 'junit', name: 'junit', version: '4.12'
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
 }
 
-compileKotlin {
-    kotlinOptions.jvmTarget = "1.8"
+sourceSets {
+    mian.java.srcDirs += 'src/main/kotlin'
 }
-compileTestKotlin {
-    kotlinOptions.jvmTarget = "1.8"
+
+//加上这些，解决中文注解问题
+tasks.withType(Javadoc) {
+    options {
+        encoding "UTF-8"
+        charSet 'UTF-8'
+        links "http://docs.oracle.com/javase/7/docs/api"
+    }
 }
+
+//task clean(type: Delete) {
+//    delete rootProject.buildDir
+//}
+
+publish {
+    repoName = 'maven'
+    userOrg = 'oseven'
+    groupId = 'com.os.auto.service'
+    artifactId = 'auto-service'
+    publishVersion = '0.1.1'
+    desc = 'support kotlin AutoService'
+    website = 'https://github.com/oSeven/AutoService'
+}
+
+//tasks.getByPath(":auto-service:bintrayUpload").enabled = true

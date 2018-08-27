@@ -1,12 +1,10 @@
 package com.os.auto.service.processor
 
-import com.google.common.collect.HashMultimap
-import com.google.common.collect.ImmutableSet
-import com.google.common.collect.Sets
 import com.os.auto.service.AutoService
 import java.io.IOException
 import java.io.PrintWriter
 import java.io.StringWriter
+import java.util.*
 import javax.annotation.processing.AbstractProcessor
 import javax.annotation.processing.RoundEnvironment
 import javax.lang.model.SourceVersion
@@ -25,10 +23,10 @@ import javax.tools.StandardLocation
 class AutoServiceProcessor : AbstractProcessor() {
 
     private val processorFileName = "javax.annotation.processing.Processor"
-    private val providers = HashMultimap.create<String, String>()
+    private val providers = HashMultiMap<String, String>()
 
-    override fun getSupportedAnnotationTypes(): ImmutableSet<String> {
-        return ImmutableSet.of(AutoService::class.java.canonicalName)
+    override fun getSupportedAnnotationTypes(): Set<String> {
+        return setOf(AutoService::class.java.canonicalName )
     }
 
     override fun getSupportedSourceVersion(): SourceVersion {
@@ -45,7 +43,6 @@ class AutoServiceProcessor : AbstractProcessor() {
             fatalError(writer.toString())
             true
         }
-
     }
 
     private fun processImpl(annotations: Set<TypeElement>, roundEnv: RoundEnvironment): Boolean {
@@ -59,7 +56,6 @@ class AutoServiceProcessor : AbstractProcessor() {
 
     private fun processAnnotations(annotations: Set<TypeElement>,
                                    roundEnv: RoundEnvironment) {
-
         val elements = roundEnv.getElementsAnnotatedWith(AutoService::class.java)
 
         log("annotations :: $annotations")
@@ -78,7 +74,7 @@ class AutoServiceProcessor : AbstractProcessor() {
             val resourceFile = "META-INF/services/$providerInterface"
             log("Working on resource file: $resourceFile")
             try {
-                val allServices = Sets.newTreeSet<String>()
+                val allServices = TreeSet<String>()
                 try {
                     // would like to be able to print the full path
                     // before we attempt to get the resource in case the behavior
@@ -117,6 +113,7 @@ class AutoServiceProcessor : AbstractProcessor() {
                 fatalError("Unable to create $resourceFile, $e")
                 return
             }
+
         }
     }
 

@@ -1,6 +1,5 @@
 package com.os.auto.service.processor
 
-import com.google.common.io.Closer
 import java.io.BufferedReader
 import java.io.BufferedWriter
 import java.io.InputStream
@@ -41,10 +40,10 @@ object ServicesFiles {
     @Throws(IOException::class)
     fun readServiceFile(input: InputStream): Set<String> {
         val serviceClasses = HashSet<String>()
-        val closer = Closer.create()
+        var reader: BufferedReader? = null
         try {
-            val r = closer.register(BufferedReader(InputStreamReader(input, UTF_8)))
-            var line: String? = r.readLine()
+            reader = BufferedReader(InputStreamReader(input, UTF_8))
+            var line: String? = reader.readLine()
             while (line != null) {
                 val commentStart = line.indexOf('#')
                 if (commentStart >= 0) {
@@ -54,13 +53,13 @@ object ServicesFiles {
                 if (!line.isEmpty()) {
                     serviceClasses.add(line)
                 }
-                line = r.readLine()
+                line = reader.readLine()
             }
             return serviceClasses
         } catch (t: Throwable) {
-            throw closer.rethrow(t)
+            throw t
         } finally {
-            closer.close()
+            reader?.close()
         }
     }
 
