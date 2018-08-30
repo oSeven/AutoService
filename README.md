@@ -5,7 +5,7 @@
 
 Kotlin AutoService
 
-# 使用
+## Example
 
 ```kotlin
 @AutoService
@@ -14,7 +14,7 @@ class MyProcessor : AbstractProcessor() {
 }
 ```
 
-# Maven
+## Maven
 
 ```maven
 <dependency>
@@ -25,8 +25,12 @@ class MyProcessor : AbstractProcessor() {
 </dependency>
 ```
 
-# Gradle
+## Gradle
 
 ```gradle
 compile 'com.os.auto.service:auto-service:0.1.1'
 ```
+
+## Thanks
+
+[Google auto-service](http://mvnrepository.com/artifact/com.google.auto.service/auto-service)
